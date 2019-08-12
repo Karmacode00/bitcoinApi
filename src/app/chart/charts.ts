@@ -3,5 +3,5 @@ export interface Charts {
   updated: String;
   updatedISO: String;
   month: String;
-  price: String;
+  bpi: Number;
 }

@@ -12,11 +12,10 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  title = 'app';
   data: Charts[];
   url = 'https://api.coindesk.com/v1/bpi/historical/close.json';
   month = [];
-  price = [];
+  bpi = [];
   chart = [];
 
   constructor(private httpClient: HttpClient) {}
@@ -24,35 +23,21 @@ export class ChartComponent implements OnInit {
   ngOnInit() {
     this.httpClient.get(this.url).subscribe((res: Charts[]) => {
       Object.keys(res);
-      Array.from(res).forEach(y => {
-        this.month.push(y.month);
-        this.price.push(y.price);
+      console.log(res);
+      Array.from(res).forEach(cont => {
+        this.month.push(cont.month);
+        this.bpi.push(cont.bpi);
       });
+      console.log(this.bpi);
       this.chart = new Chart('canvas', {
         type: 'line',
         data: {
           labels: this.month,
-          datasets: [
-            {
-              data: this.price,
-              borderColor: '#3e95cd',
-              fill: false
-            }
-          ]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          scales: {
-            xAxes: [{
-              display: true
-            }],
-            yAxes: [{
-              display: true
-            }],
-          }
-        }
+          datasets: [{
+              label: 'closing value',
+              data: this.bpi,
+          }]
+      }
       });
     });
   }
@@ -67,6 +52,7 @@ export class ChartComponent implements OnInit {
     this.chartService
     .getChart()
     .subscribe((data: Chart[]) => {
+      Object.keys(data);
       this.chart = data;
       this.chart.map(res => {
         console.log(res);
